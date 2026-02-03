@@ -1,10 +1,13 @@
 FROM freshrss/freshrss:latest
 
-# Modify Apache configuration to serve as default virtual host
-RUN cat > /etc/apache2/sites-available/FreshRSS.Apache.conf <<'EOF'
+# Fix Apache configuration issues for Railway
+RUN mkdir -p /var/log/apache2 /run/apache2 && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    cat > /etc/apache2/sites-available/FreshRSS.Apache.conf <<'EOF'
 <VirtualHost _default_:80>
     DocumentRoot /var/www/FreshRSS/p
 
+    # Allow .htaccess overrides
     <Directory /var/www/FreshRSS/p>
         AllowOverride All
         Require all granted
